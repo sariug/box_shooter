@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,21 +15,23 @@ static const char *fShader = R"(../shaders/shader.frag)";
 class Box
 {
 public:
-    Box(GLfloat x, GLfloat y, GLfloat z)
+    Box(GLfloat x, GLfloat y, GLfloat z, char *fileloc)
     {
-
         origin = glm::vec3(x, y, z);
         //model = glm::translate(model, origin);
         this->createBoxMesh();
 
         createShader(vShader, fShader);
+        // load texture;
+        _texture = new Texture(fileloc);
+        _texture->LoadTexture();
     }
     Box()
     {
         origin = glm::vec3(0, 0, 0);
         this->createBoxMesh();
     }
-    ~Box() { _mesh->clearMesh(); }
+    ~Box() { _mesh->clearMesh(); _texture->ClearTexture();}
     void scaleBox(glm::vec3 _scale)
     {
         scale = _scale;
@@ -52,7 +55,7 @@ public:
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(cameraView));
 
-
+        _texture->UseTexture();
         _mesh->renderMesh();
         glUseProgram(0);
     }
@@ -85,24 +88,25 @@ private:
             6, 7, 3};
         GLfloat vertices[] = {
             // front
-            -1.0, -1.0, 1.0 ,
-            1.0, -1.0 , 1.0,
-            1.0, 1.0, 1.0,
-            -1.0, 1.0, 1.0,
+            -1.0, -1.0, 1.0 , 0.0, 0.0,
+            1.0, -1.0 , 1.0,  1.0, .0,
+            1.0, 1.0, 1.0,    1.0, 1.0,
+            -1.0, 1.0, 1.0,   .0, 1.0,
             // back
-            -1.0, -1.0, -1.0,
-            1.0, -1.0, -1.0,
-            1.0, 1.0, -1.0,
-            -1.0, 1.0, -1.0};
+            -1.0, -1.0, -1.0,1.0, 0.0,
+            1.0, -1.0, -1.0, 0.0, .0,
+            1.0, 1.0, -1.0, 1.0, 0.0,
+            -1.0, 1.0, -1.0,  1.0, 1.0};
 
         _mesh = new Mesh();
 
-        _mesh->createMesh(vertices, indices, 24, 36);
+        _mesh->createMesh(vertices, indices, 40, 36);
     }
     glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
     GLuint uniformModel, uniformProjection, uniformView;
     glm::vec3 origin;
     Mesh *_mesh;
     Shader *_shader;
+    Texture *_texture;
     glm::mat4 model;
 };

@@ -38,6 +38,7 @@ add_executable(box_shooter
 		src/Shader.cpp
 		src/Window.cpp
 		src/Camera.cpp
+		src/Texture.cpp
 )
 target_link_libraries(box_shooter
 	${ALL_LIBS}

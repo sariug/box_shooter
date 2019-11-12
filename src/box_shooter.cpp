@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <vector>
 #include "box.h"
 
@@ -108,7 +110,7 @@ void process_keys()
 	auto keys = mainwindow->getKeys();
 	if (keys[GLFW_KEY_SPACE])
 	{
-		shapes.push_back(new Box(-20.0f, 20.0f, -20.0f));
+		shapes.push_back(new Box(-20.0f, 20.0f, -20.0f, "../assets/tilbe.png"));
 		auto origin = shapes.back()->getOrigin();
 		btCollisionShape *colShape = new btBoxShape(btVector3(1, 1, 1));
 		collisionShapes.push_back(colShape);
@@ -146,7 +148,7 @@ void init_visual_shapes()
 {
 	// Items
 	// Ground
-	Box *ground = new Box(2, -2, 2);
+	Box *ground = new Box(2, -2, 2, "../assets/ibo.png");
 	ground->scaleBox(glm::vec3(10.0f, 1.0f, 10.0f));
 
 	shapes.push_back(ground);
@@ -157,7 +159,7 @@ void init_visual_shapes()
 		{
 			for (int k = 0; k < 5; k++)
 			{
-				shapes.push_back(new Box(i, j, k));
+				shapes.push_back(new Box(i, j, k, "../assets/ibo.png"));
 			}
 		}
 	}
