@@ -6,7 +6,7 @@ A simple game that one can throw box to a pile of boxes to drop some of them. Th
 
 ## Installing Box Shooter
 
-To install <project_name>, follow these steps:
+To install Box Shooter, follow these steps:
 
 ```
 mkdir build && cd build
