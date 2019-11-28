@@ -37,7 +37,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	camera = new Camera(glm::vec3(-20.0f, 20.0f, -20.0f), glm::vec3(.0f, 1.0f, .0f), 0.0f, -30.0f, 5.0f, .5f);
+	camera = new Camera(glm::vec3(-20.0f, 20.0f, -20.0f), glm::vec3(.0f, 1.0f, .0f), 45.0f, -30.0f, 5.0f, .5f);
 
 	glm::mat4 projection = glm::perspective(45.0f, mainwindow->getBufferWidth() / mainwindow->getBufferHeight(), 0.01f, 100.0f);
 	// Loop until it is closed
@@ -84,7 +84,7 @@ void check_collisions()
 			trans = obj->getWorldTransform();
 		}
 		trans.getOpenGLMatrix(glm::value_ptr(shapes.at(j)->set_transformation()));
-		printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+		//	printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
 		if (float(trans.getOrigin().getY()) > -100.0)
 			continue;
 
@@ -105,9 +105,12 @@ void check_collisions()
 
 void process_keys()
 {
-	auto keys = mainwindow->getKeys();
-	if (keys[GLFW_KEY_SPACE])
+	int posx, posy;
+	bool mouse_clicked;
+	std::tie(posx, posy, mouse_clicked) = mainwindow->mouse_feedback();
+	if (mouse_clicked)
 	{
+
 		shapes.push_back(new Box(-20.0f, 20.0f, -20.0f));
 		auto origin = shapes.back()->getOrigin();
 		btCollisionShape *colShape = new btBoxShape(btVector3(1, 1, 1));
@@ -133,10 +136,15 @@ void process_keys()
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		btRigidBody *body = new btRigidBody(rbInfo);
 		btVector3 direction;
-		direction.setX(camera->get_front().x);
-		direction.setY(camera->get_front().y);
-		direction.setZ(camera->get_front().z);
+		auto camera_dir = camera->get_front();
 
+		
+		std::cout << camera_dir.x << " " << camera_dir.y << " " << camera_dir.z << std::endl;
+		glm::vec3 mouse_dir = glm::normalize(glm::vec3(posx - 400, 300 - posy, 0));
+
+		direction.setX(camera_dir.x);
+		direction.setY(camera_dir.y);
+		direction.setZ(camera_dir.z);
 		body->setLinearVelocity(direction * 25);
 		dynamicsWorld->addRigidBody(body);
 	}

@@ -51,7 +51,6 @@ int Window::initialize()
     // Handle key callbacks
     this->createCallback();
     glfwSetInputMode(mainWindow, GLFW_STICKY_KEYS, GL_FALSE);
-    glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Allow modern extension features
     glewExperimental = GL_TRUE;
 
@@ -109,15 +108,28 @@ void Window::handleMouse(GLFWwindow *window, double xPos, double yPos)
     theWindow->lastY = yPos;
     theWindow->lastX = xPos;
 }
+std::tuple<GLfloat, GLfloat, bool> Window::mouse_feedback()
+{
+    // If pressed
+    if (glfwGetMouseButton(mainWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        return std::make_tuple(lastX, lastY, true);
+    }
+    return std::make_tuple(lastX, lastY, false);
+}
 
-GLfloat Window::getXchange(){
+GLfloat Window::getX() { return lastX; }
+GLfloat Window::getY() { return lastY; }
+
+GLfloat Window::getXchange()
+{
     GLfloat theChange = xChange;
-    xChange = 0.0f; 
+    xChange = 0.0f;
     return theChange;
 }
 GLfloat Window::getYchange()
 {
     GLfloat theChange = yChange;
-    yChange = 0.0f; 
+    yChange = 0.0f;
     return theChange;
 }

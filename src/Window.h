@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <tuple>
 #include <iostream>
 class Window
 {
@@ -24,7 +24,9 @@ public:
 
     GLfloat getXchange();
     GLfloat getYchange();
-
+    GLfloat getX();
+    GLfloat getY();
+    std::tuple<GLfloat, GLfloat, bool> mouse_feedback();
     void swapBuffers() { glfwSwapBuffers(mainWindow); }
 
     ~Window();
